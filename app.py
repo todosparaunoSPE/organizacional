@@ -19,7 +19,7 @@ st.sidebar.subheader("👤 Información de Contacto")
 st.sidebar.write("**Javier Horacio Pérez Ricárdez**")
 st.sidebar.write(f"📅 {datetime.now().strftime('%d/%m/%Y')}")
 st.sidebar.write("📱 +52 56 1056 4095")
-st.sidebar.write("📧 jhperez@email.com")
+st.sidebar.write("📧 jahoperi@gmail.com")
 st.sidebar.markdown("---")
 
 # --- Datos de ejemplo integrados ---
@@ -231,3 +231,4 @@ with footer_col2:
 with footer_col3:
     st.write("**Fecha:**")
     st.write(datetime.now().strftime("%d/%m/%Y %H:%M"))
+
