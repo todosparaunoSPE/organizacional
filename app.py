@@ -9,8 +9,18 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
+from datetime import datetime
 
 st.set_page_config(page_title="Capital Humano - Evaluación y Talento", page_icon="💼", layout="wide")
+
+# --- Información personal ---
+st.sidebar.markdown("---")
+st.sidebar.subheader("👤 Información de Contacto")
+st.sidebar.write("**Javier Horacio Pérez Ricárdez**")
+st.sidebar.write(f"📅 {datetime.now().strftime('%d/%m/%Y')}")
+st.sidebar.write("📱 +52 56 1056 4095")
+st.sidebar.write("📧 jhperez@email.com")
+st.sidebar.markdown("---")
 
 # --- Datos de ejemplo integrados ---
 @st.cache_data
@@ -57,6 +67,15 @@ def generar_datos_talento():
 st.sidebar.title("Menú")
 menu = st.sidebar.radio("Ir a:", ["Evaluación de Desempeño y Clima", "Gestión del Cambio", "Análisis del Talento"])
 
+# --- Header principal con información ---
+col1, col2 = st.columns([3, 1])
+with col1:
+    st.title("💼 Dashboard de Capital Humano")
+    st.write("Sistema integral de gestión del talento humano")
+with col2:
+    st.write(f"**Fecha:** {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+    st.write("**Desarrollado por:** Javier H. Pérez R.")
+
 # --- 1. Evaluación de desempeño y clima laboral ---
 if menu == "Evaluación de Desempeño y Clima":
     st.header("📊 Evaluación de Desempeño y Clima Laboral")
@@ -96,7 +115,6 @@ if menu == "Evaluación de Desempeño y Clima":
         'Comunicación': 'mean'
     }).round(1)
     
-    # Mostrar sin estilo de gradiente
     st.dataframe(dept_stats, use_container_width=True)
 
 # --- 2. Estrategias de gestión del cambio ---
@@ -200,3 +218,16 @@ if st.sidebar.button("📊 Ver Estadísticas Generales"):
     st.sidebar.write(f"- Total empleados: 50")
     st.sidebar.write(f"- Total proyectos: 20")
     st.sidebar.write(f"- Departamentos: 5")
+
+# --- Footer con información de contacto ---
+st.markdown("---")
+footer_col1, footer_col2, footer_col3 = st.columns(3)
+with footer_col1:
+    st.write("**Desarrollado por:**")
+    st.write("Javier Horacio Pérez Ricárdez")
+with footer_col2:
+    st.write("**Contacto:**")
+    st.write("📱 +52 56 1056 4095")
+with footer_col3:
+    st.write("**Fecha:**")
+    st.write(datetime.now().strftime("%d/%m/%Y %H:%M"))
