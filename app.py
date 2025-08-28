@@ -96,7 +96,8 @@ if menu == "Evaluación de Desempeño y Clima":
         'Comunicación': 'mean'
     }).round(1)
     
-    st.dataframe(dept_stats.style.background_gradient(cmap='YlGnBu'), use_container_width=True)
+    # Mostrar sin estilo de gradiente
+    st.dataframe(dept_stats, use_container_width=True)
 
 # --- 2. Estrategias de gestión del cambio ---
 elif menu == "Gestión del Cambio":
@@ -159,20 +160,12 @@ elif menu == "Análisis del Talento":
         # Top 5 talentos
         st.write("**Top 5 Talentos:**")
         top_5 = df.head(5)[["Nombre", "Departamento", "Desempeño", "Potencial", "Score Talento"]]
-        st.dataframe(top_5.style.format({"Desempeño": "{:.0f}", "Potencial": "{:.0f}", "Score Talento": "{:.1f}"}), 
-                    use_container_width=True)
+        st.dataframe(top_5, use_container_width=True)
         
         # Ranking completo
         st.write("**Ranking Completo:**")
         ranking_completo = df[["Nombre", "Departamento", "Desempeño", "Potencial", "Score Talento", "Habilidades", "Experiencia"]]
-        st.dataframe(ranking_completo.style.format({
-            "Desempeño": "{:.0f}", 
-            "Potencial": "{:.0f}", 
-            "Score Talento": "{:.1f}",
-            "Habilidades": "{:.0f}",
-            "Experiencia": "{:.0f}"
-        }).background_gradient(subset=['Score Talento'], cmap='YlGnBu'), 
-        use_container_width=True)
+        st.dataframe(ranking_completo, use_container_width=True)
 
     # Análisis por departamento
     st.subheader("📊 Estadísticas por Departamento")
@@ -184,7 +177,7 @@ elif menu == "Análisis del Talento":
         'Score Talento': 'mean'
     }).round(1)
     
-    st.dataframe(dept_stats.style.background_gradient(cmap='YlOrRd'), use_container_width=True)
+    st.dataframe(dept_stats, use_container_width=True)
 
 # --- Información adicional ---
 st.sidebar.markdown("---")
@@ -194,3 +187,16 @@ st.sidebar.info("""
 - No es necesario subir archivos Excel
 - Los datos se resetearán al recargar la página
 """)
+
+# --- Agregar botones de acción ---
+st.sidebar.markdown("---")
+st.sidebar.subheader("🔧 Acciones")
+if st.sidebar.button("🔄 Actualizar Datos"):
+    st.cache_data.clear()
+    st.rerun()
+
+if st.sidebar.button("📊 Ver Estadísticas Generales"):
+    st.sidebar.write("**Estadísticas Globales:**")
+    st.sidebar.write(f"- Total empleados: 50")
+    st.sidebar.write(f"- Total proyectos: 20")
+    st.sidebar.write(f"- Departamentos: 5")
