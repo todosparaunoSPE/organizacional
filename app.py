@@ -9,28 +9,44 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os
+from pathlib import Path
 
 st.set_page_config(page_title="Capital Humano - Evaluación y Talento", page_icon="💼", layout="wide")
 
 # --- Función para cargar archivo automáticamente ---
 def cargar_archivo_automatico(nombre_archivo, key_suffix):
-    # Primero intenta cargar el archivo automáticamente
-    if os.path.exists(nombre_archivo):
-        try:
-            df = pd.read_excel(nombre_archivo)
-            st.success(f"✅ Archivo '{nombre_archivo}' cargado automáticamente")
-            return df
-        except Exception as e:
-            st.warning(f"No se pudo cargar '{nombre_archivo}': {e}")
+    # Intentar varias ubicaciones posibles
+    posibles_rutas = [
+        nombre_archivo,  # Directorio actual
+        Path(nombre_archivo),  # Usando pathlib
+        Path(__file__).parent / nombre_archivo,  # Directorio del script
+    ]
     
-    # Si no existe o hay error, muestra el uploader
+    for ruta in posibles_rutas:
+        try:
+            if os.path.exists(ruta):
+                df = pd.read_excel(ruta)
+                st.success(f"✅ Archivo '{ruta}' cargado automáticamente")
+                return df
+        except Exception as e:
+            continue
+    
+    # Si no se encuentra en ninguna ruta, mostrar uploader
+    st.info(f"📋 No se encontró el archivo '{nombre_archivo}'. Por favor, súbelo manualmente.")
     uploaded_file = st.file_uploader(f"📎 Sube archivo {nombre_archivo} (xlsx)", 
                                    type=["xlsx"], 
                                    key=f"upload_{key_suffix}")
     if uploaded_file:
-        return pd.read_excel(uploaded_file)
+        try:
+            return pd.read_excel(uploaded_file)
+        except Exception as e:
+            st.error(f"Error al leer el archivo: {e}")
     
     return None
+
+# --- Mostrar directorio actual para debugging ---
+st.sidebar.write(f"Directorio actual: {os.getcwd()}")
+st.sidebar.write(f"Archivos disponibles: {[f for f in os.listdir('.') if f.endswith('.xlsx')]}")
 
 # --- Menú lateral ---
 st.sidebar.title("Menú")
@@ -93,3 +109,15 @@ elif menu == "Análisis del Talento":
             df = df.sort_values("Score Talento", ascending=False)
             st.subheader("🏆 Ranking de Talento")
             st.dataframe(df[["Nombre", "Departamento", "Desempeño", "Potencial", "Score Talento"]])
+
+# --- Instrucciones para el usuario ---
+st.sidebar.markdown("---")
+st.sidebar.info("""
+**📋 Instrucciones:**
+1. Coloca los archivos Excel en la misma carpeta que esta aplicación
+2. Nombres requeridos:
+   - `talento.xlsx`
+   - `evaluaciones.xlsx`
+   - `indicadores.xlsx`
+3. La aplicación los cargará automáticamente
+""")
